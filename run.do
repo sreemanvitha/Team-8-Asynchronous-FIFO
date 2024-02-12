@@ -1,14 +1,9 @@
 vlib work
 
-vlog async_fifo1.sv
-vlog fifomem.sv
-vlog sync_w2r.sv
-vlog sync_r2w.sv
-vlog wptr_full.sv
-vlog rptr_empty.sv
-vlog async_fifo1_tb.sv
+vlog design.sv
+vlog testbench.sv
 
-vsim -voptargs=+acc work.async_fifo1_tb
+vsim -voptargs=+acc work.top
 
 add wave -r *
 run -all
