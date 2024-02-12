@@ -1,6 +1,6 @@
 vlib work
 
-vlog async_fifo1_tb.sv
+vlog async_fifo1.sv
 vlog fifomem.sv
 vlog sync_w2r.sv
 vlog sync_r2w.sv
