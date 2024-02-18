@@ -11,9 +11,7 @@ class driver;
   
   //constructor
   function new(virtual fifo_intf fifo_vif,mailbox gen2driv);
-    //getting the interface
     this.fifo_vif = fifo_vif;
-    //getting the mailbox handles from  environment 
     this.gen2driv = gen2driv;
   endfunction
   
@@ -32,15 +30,26 @@ class driver;
     forever begin   
       transaction tr;
       gen2driv.get(tr);
-      @(posedge fifo_vif.wclk);
-       fifo_vif.winc <= tr.winc;
-       fifo_vif.rinc <= tr.rinc;
-       fifo_vif.wdata <= tr.wdata;
-       @(posedge fifo_vif.wclk);
+      @(negedge fifo_vif.wclk);
+      //if(1) /*tr.winc | tr.rinc)*/begin
+         fifo_vif.winc <= tr.winc;  
+         fifo_vif.wdata <= tr.wdata;
+         fifo_vif.ID <= tr.ID;
+        tr.wfull = fifo_vif.wfull;
+         fifo_vif.rinc <= tr.rinc;
+        tr.rempty = fifo_vif.rempty;
+
+
+
+         if(tr.rinc) begin
+           @(negedge fifo_vif.rclk);   //idle cycle 1
+           fifo_vif.rinc <= '0;
+           @(negedge fifo_vif.rclk);   //idle cycle 2
+         end
+      //end
       no_transactions++;
-      $info($time,"[DRIVER]  no_transactions:%d winc:%h rinc:%h wdata:%h",no_transactions, fifo_vif.winc,fifo_vif.rinc,fifo_vif.wdata);
-    end
-    
+      $display($time,"\t\t\t\t\t\t\t\t\t\t\t\t[DRIVER] ID:%d no_transactions:%d winc:%h rinc:%h wdata:%h rdata:%h",fifo_vif.ID,no_transactions, fifo_vif.winc,fifo_vif.rinc,fifo_vif.wdata,fifo_vif.rdata);
+    end  
    
   endtask
 endclass
