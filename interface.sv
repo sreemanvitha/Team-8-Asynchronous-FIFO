@@ -12,5 +12,6 @@ interface fifo_intf #(parameter DSIZE = 8,
   logic  [DSIZE-1:0] rdata;
   logic  wfull;
   logic  rempty;
+  int ID;
   
 endinterface
